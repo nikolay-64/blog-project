@@ -38,7 +38,7 @@ gulp.task('pug', function (callback) {
                 }
             })
         )
-        .pipe(gulp.dest('./build/'))
+        .pipe(gulp.dest('./docs/'))
         .pipe(browserSync.stream());
     callback();
 });
@@ -66,20 +66,20 @@ gulp.task('scss', function (callback) {
             })
         )
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./build/css/'))
+        .pipe(gulp.dest('./docs/css/'))
         .pipe(browserSync.stream());
     callback();
 });
 
 // Копирование Изображений
 gulp.task('copy:img', function (callback) {
-    return gulp.src('./src/img/**/*.*').pipe(gulp.dest('./build/img/'));
+    return gulp.src('./src/img/**/*.*').pipe(gulp.dest('./docs/img/'));
     callback();
 });
 
 // Копирование Скриптов
 gulp.task('copy:js', function (callback) {
-    return gulp.src('./src/js/**/*.*').pipe(gulp.dest('./build/js/'));
+    return gulp.src('./src/js/**/*.*').pipe(gulp.dest('./docs/js/'));
     callback();
 });
 
@@ -87,7 +87,7 @@ gulp.task('copy:js', function (callback) {
 gulp.task('watch', function () {
     // Следим за картинками и скриптами и обновляем браузер
     watch(
-        ['./build/js/**/*.*', './build/img/**/*.*'],
+        ['./docs/js/**/*.*', './docs/img/**/*.*'],
         gulp.parallel(browserSync.reload)
     );
 
@@ -99,7 +99,7 @@ gulp.task('watch', function () {
     // Слежение за PUG и сборка
     watch(["./src/pug/**/*.pug", "./src/data/**/*.json"], gulp.parallel('pug'));
 
-    // Следим за картинками и скриптами, и копируем их в build
+    // Следим за картинками и скриптами, и копируем их в docs
     watch('./src/img/**/*.*', gulp.parallel('copy:img'));
     watch('./src/js/**/*.*', gulp.parallel('copy:js'));
 });
@@ -108,13 +108,13 @@ gulp.task('watch', function () {
 gulp.task('server', function () {
     browserSync.init({
         server: {
-            baseDir: './build/',
+            baseDir: './docs/',
         },
     });
 });
 
-gulp.task('clean:build', function () {
-    return del('./build');
+gulp.task('clean:docs', function () {
+    return del('./docs');
 });
 
 // Дефолтный таск (задача по умолчанию)
@@ -122,7 +122,7 @@ gulp.task('clean:build', function () {
 gulp.task(
     'default',
     gulp.series(
-        gulp.parallel('clean:build'),
+        gulp.parallel('clean:docs'),
         gulp.parallel('scss', 'pug', 'copy:img', 'copy:js'),
         gulp.parallel('server', 'watch')
     )
